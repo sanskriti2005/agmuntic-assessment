@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/actions/productActions";
+import { fetchProducts, removeFromCart } from "../redux/actions/productActions";
 import {
   Box,
   Spinner,
@@ -12,31 +12,47 @@ import {
   Button,
   VStack,
   Flex,
+  HStack,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.product);
+  const totalPrice = cart.reduce((acc, product) => acc + product.price, 0);
+  const navigate = useNavigate()
+
+  
   return (
     <div>
-      {/* Cart Grid */}
+      {/* Cart Items*/}
       {cart?.length > 0 ? (
-        <SimpleGrid columns={[1, 2, 3]} gap={10} padding={20}>
+        <VStack gap={10} padding={20}>
           {cart.map((product) => (
-            <VStack key={product.id} boxShadow="md" p={4} borderRadius="md">
+            <HStack key={product.id} boxShadow="md" p={4} borderRadius="md" width={'80%'}>
               <Image
+                height={100}
+                width={100}
                 src={product.image}
                 alt={product.title}
                 borderRadius="md"
               />
-              <Flex width={"100%"} justify={"space-between"}>
+              <Flex width={"100%"} justify={"space-between"} flexDirection={'column'}>
                 <Heading size="md">{product.title}</Heading>
                 <Text fontWeight="bold" color="green.500">
                   ${product.price}
                 </Text>
               </Flex>
-            </VStack>
+              <Button onClick={() => dispatch(removeFromCart(product.id))}>Remove from cart</Button>
+            </HStack>
           ))}
-        </SimpleGrid>
+          <HStack boxShadow="md" p={4} borderRadius="md" width={'80%'}>
+              <Flex width={"100%"} justify={"space-between"} flexDirection={'column'}>
+                <Heading size="md">Total: ${totalPrice.toFixed(2)}</Heading>
+              </Flex>
+              <Button onClick={() => navigate('/payment')}>Move to Payment</Button>
+            </HStack>
+        </VStack>
       ) : (
         <Text>No products in Cart</Text>
       )}

@@ -29,5 +29,6 @@ export const addToCart = (product) => (dispatch) => {
 
 // Remove product from cart
 export const removeFromCart = (productId) => (dispatch) => {
+  alert('Removed from cart')
   dispatch({ type: REMOVE_FROM_CART, payload: productId });
 };
