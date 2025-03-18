@@ -23,6 +23,7 @@ export const fetchProducts = () => async (dispatch) => {
 
 // Add product to cart
 export const addToCart = (product) => (dispatch) => {
+  alert('Added to cart')
   dispatch({ type: ADD_TO_CART, payload: product });
 };
 
